@@ -1,20 +1,259 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>projeto 3 experiência criativa</title>
-        <meta charset="UTF-8">
-        <link rel="stylesheet" href="styles.css">
-    </head>
-    <body>
-        <div class="container">
-            <!-- por enq ta assim mas é só pra ter uma base-->
-            <h1>exp criativa projeto 3</h1>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pegada de Carbono</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navlogo">
+        <div>
+          <h1>Curitiba +</h1>
+          <h5>Sustentável</h5>
+          <img
+            width="140px"
+            style="margin-top: 50px; margin-left: 25px"
+            src="https://png.pngtree.com/png-vector/20241217/ourmid/pngtree-minimalist-green-leaf-logo-with-nature-inspired-design-vector-png-image_14756918.png"
+          />
         </div>
+      </div>
+      <div class="buttons">
+        <a href="#content">
+          <button class="nav-buttons">Mapa Verde</button>
+        </a>
+        <a href="#avaliacoes">
+          <button class="nav-buttons">Avaliações</button>
+        </a>
 
-        <div class="container" id="...">
+        <a href="#quiz">
+          <button class="nav-buttons">Quiz Sustentável</button>
+        </a>
+      </div>
+    </nav>
 
+    <div id="content" style="margin-left: 300px; padding: 20px">
+      <h2>Mapa Sustentável de Curitiba</h2>
+      <div id="map" class="map"></div>
+      <div id="toast" class="toast">Avaliação enviada com sucesso!</div>
+    </div>
+
+    <div
+      id="form-avaliacao-container"
+      style="
+        display: none;
+        padding: 20px;
+        background: #f0f0f0;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 500px;
+        margin-left: 750px;
+        flex-direction: columns;
+      "
+    >
+      <h3>Avaliar ponto: <span id="nome-ponto"></span></h3>
+      <form id="avaliacao-form">
+        <label for="nome">Seu Nome:</label><br />
+        <input
+          type="text"
+          id="nome"
+          name="nome"
+          required
+          style="
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+          "
+        /><br />
+
+        <label for="comentario">Comentário:</label><br />
+        <textarea
+          id="comentario"
+          name="comentario"
+          rows="4"
+          required
+          style="
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+          "
+        ></textarea
+        ><br />
+
+        <label for="nota">Nota (1 a 5):</label><br />
+        <input
+          type="number"
+          id="nota"
+          name="nota"
+          min="1"
+          max="5"
+          required
+          style="
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 12px;
+            border-radius: 10px;
+          "
+        />
+        <br />
+        <button
+          type="submit"
+          style="
+            background-color: #2d6e4a;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+          "
+        >
+          Enviar Avaliação
+        </button>
+        <button
+          type="button"
+          onclick="fecharFormulario()"
+          style="
+            margin-left: 10px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+          "
+        >
+          Cancelar
+        </button>
+      </form>
+      <div id="status-msg" style="margin-top: 12px; font-weight: 500"></div>
+    </div>
+    <div id="avaliacoes" class="ava">
+      <h1 style="margin-bottom: 30px">Avaliações</h1>
+      <div id="lista-avaliacoes"></div>
+    </div>
+
+    <div id="quiz" class="quiz" style="margin-top: 400px">
+      <h1>Quiz</h1>
+      <h1>Calcule a sua pegada de carbono!🌿</h1>
+      <form id="quizForm">
+        <h2 style="margin-top: 100px">
+          Quantos dias/semanas você usa transporte Sustentável?
+        </h2>
+        <input
+          type="number"
+          id="diasSustentavel"
+          name="diasSustentavel"
+          min="0"
+          max="7"
+          required
+          style="
+            width: 40%;
+            padding: 8px;
+            margin-bottom: 50px;
+            margin-top: 20px;
+          "
+          placeholder="Digite um número de 0 à 7"
+        />
+
+        <h2>Quantas refeições vegetarianas você faz por semana?</h2>
+        <input
+          type="number"
+          id="refVegetariana"
+          name="refVegetariana"
+          min="0"
+          max="7"
+          required
+          style="
+            width: 40%;
+            padding: 8px;
+            margin-bottom: 50px;
+            margin-top: 20px;
+          "
+          placeholder="Digite um número de 0 à 7"
+        />
+
+        <h2>Você separa seu lixo reciclável corretamente?</h2>
+        <input
+          type="checkbox"
+          id="separaLixo"
+          name="separaLixo"
+          style="
+            transform: scale(3);
+            margin-bottom: 50px;
+            margin-top: 20px;
+            margin-left: 20px;
+          "
+        />
+        <br />
+
+        <button
+          type="button"
+          onclick="calcularQuiz()"
+          style="
+            margin-top: 10px;
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+          "
+        >
+          Calcular minha pegada
+        </button>
+      </form>
+
+      <div
+        id="resultadoQuiz"
+        style="margin-top: 30px; font-size: 20px; font-weight: bold"
+      ></div>
+      <div
+        id="graficoQuiz"
+        style="
+          margin-top: 40px;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 20px;
+          justify-content: center;
+        "
+      >
+        <div style="flex: 1; min-width: 300px; max-width: 45%">
+          <h2>Seu Progresso:</h2>
+          <div
+            id="barraResultado"
+            style="
+              width: 0;
+              height: 30px;
+              background-color: #4caf50;
+              border-radius: 8px;
+              transition: width 1s ease;
+            "
+          ></div>
+          <canvas id="myQuizBarChart" width="400" height="200"></canvas>
         </div>
-        
-        <script src="index.js"></script>
-    </body>
+        <div style="flex: 1; min-width: 300px; max-width: 45%">
+          <h2>Proporção da Pegada:</h2>
+          <canvas id="myQuizDoughnutChart" width="400" height="200"></canvas>
+        </div>
+      </div>
+      <div id="graficoPontosTipos" style="margin-top: 40px">
+        <h2>Pontos Sustentáveis por Categoria:</h2>
+        <canvas id="grafico" width="400" height="200"></canvas>
+      </div>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="firebase.js"></script>
+    <script src="script.js"></script>
+  </body>
 </html>
